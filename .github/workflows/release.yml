@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history needed so we can push appcast.xml back to main.
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Run tests
+        run: make test
+
+      - name: Build DMG
+        run: make app VERSION=${{ steps.version.outputs.VERSION }}
+
+      - name: Sign DMG and update appcast.xml
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          VERSION=${{ steps.version.outputs.VERSION }}
+          DMG="ClaudeUsageBar-${VERSION}.dmg"
+
+          # Locate sign_update (unpacked by swift build as part of Sparkle SPM artifact)
+          SIGN_UPDATE=$(find .build/artifacts -name "sign_update" -type f 2>/dev/null | head -1)
+          if [ -z "$SIGN_UPDATE" ]; then
+            echo "ERROR: sign_update tool not found. Did swift build run?" >&2
+            exit 1
+          fi
+
+          # sign_update reads SPARKLE_PRIVATE_KEY from the environment automatically.
+          SIG_OUTPUT=$("$SIGN_UPDATE" "$DMG")
+          echo "sign_update output: $SIG_OUTPUT"
+
+          # Parse edSignature value (output format: sparkle:edSignature="..." sparkle:length="...")
+          ED_SIG=$(echo "$SIG_OUTPUT" | grep -o 'edSignature="[^"]*"' | cut -d'"' -f2)
+          if [ -z "$ED_SIG" ]; then
+            echo "ERROR: Could not parse edSignature from sign_update output." >&2
+            exit 1
+          fi
+
+          DMG_SIZE=$(stat -f%z "$DMG")
+          python3 scripts/update-appcast.py "$VERSION" "$DMG_SIZE" "$ED_SIG"
+
+      - name: Commit updated appcast.xml to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add appcast.xml
+          git commit -m "Update appcast.xml for v${{ steps.version.outputs.VERSION }}"
+          git push origin HEAD:main
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.VERSION }}
+          generate_release_notes: true
+          files: |
+            ClaudeUsageBar-${{ steps.version.outputs.VERSION }}.dmg
+            ClaudeUsageBar-${{ steps.version.outputs.VERSION }}.dmg.sha256
