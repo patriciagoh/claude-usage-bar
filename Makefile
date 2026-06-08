@@ -49,14 +49,9 @@ app: test
 	cp -r $(SPARKLE_FW) $(BUNDLE)/Contents/Frameworks/
 	# Inject version from tag
 	/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $(VERSION)" $(PLIST)
-	# Sign inner Sparkle components first, then the app
-	codesign --force --sign - "$(BUNDLE)/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/org.sparkle-project.InstallerLauncher.xpc" 2>/dev/null || true
-	codesign --force --sign - "$(BUNDLE)/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/org.sparkle-project.Downloader.xpc" 2>/dev/null || true
-	codesign --force --sign - "$(BUNDLE)/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate" 2>/dev/null || true
-	codesign --force --sign - "$(BUNDLE)/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app" 2>/dev/null || true
-	codesign --force --sign - "$(BUNDLE)/Contents/Frameworks/Sparkle.framework"
-	codesign --force --sign - $(BUNDLE)
-	codesign --verify --strict $(BUNDLE)
+	# Ad-hoc sign (--deep handles Sparkle.framework and its nested XPC services)
+	codesign --force --deep --sign - $(BUNDLE)
+	codesign --verify $(BUNDLE)
 	# Package as DMG with Applications alias for drag-to-install
 	rm -rf .build/dmg-staging
 	mkdir .build/dmg-staging
