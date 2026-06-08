@@ -20,7 +20,7 @@
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>SUFeedURL</key>
-    <string>https://raw.githubusercontent.com/patriciagoh/ClaudeUsageBar/main/appcast.xml</string>
+    <string>https://raw.githubusercontent.com/patriciagoh/claude-usage-bar/main/appcast.xml</string>
     <key>SUPublicEDKey</key>
     <string>TXzi12gVQ6xElp/4rKDLVKjSeqhd8T06OXorTbIB1TE=</string>
 </dict>

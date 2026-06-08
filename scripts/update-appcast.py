@@ -10,7 +10,7 @@ size    = sys.argv[2]
 sig     = sys.argv[3]
 
 url = (
-    f"https://github.com/patriciagoh/ClaudeUsageBar/releases/download"
+    f"https://github.com/patriciagoh/claude-usage-bar/releases/download"
     f"/v{version}/ClaudeUsageBar-{version}.dmg"
 )
 
