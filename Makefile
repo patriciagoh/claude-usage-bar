@@ -45,12 +45,12 @@ app: test
 	mkdir -p $(BUNDLE)/Contents/Frameworks
 	cp .build/$(APP_NAME)      $(BUNDLE)/Contents/MacOS/$(APP_NAME)
 	cp Resources/Info.plist    $(BUNDLE)/Contents/
-	# Embed Sparkle
-	cp -r $(SPARKLE_FW) $(BUNDLE)/Contents/Frameworks/
+	# Embed Sparkle (ditto preserves symlinks)
+	ditto "$(SPARKLE_FW)" "$(BUNDLE)/Contents/Frameworks/Sparkle.framework"
 	# Inject version from tag
 	/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $(VERSION)" $(PLIST)
-	# Ad-hoc sign (--deep handles Sparkle.framework and its nested XPC services)
-	codesign --force --deep --sign - $(BUNDLE)
+	# Ad-hoc sign the app — Sparkle.framework is already signed by the Sparkle project
+	codesign --force --sign - $(BUNDLE)
 	codesign --verify $(BUNDLE)
 	# Package as DMG with Applications alias for drag-to-install
 	rm -rf .build/dmg-staging
