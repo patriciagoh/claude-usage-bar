@@ -39,6 +39,8 @@ app: test
 	  .build/arm64-apple-macosx/release/$(APP_NAME) \
 	  .build/x86_64-apple-macosx/release/$(APP_NAME) \
 	  -output .build/$(APP_NAME)
+	# Fix RPATH so dyld finds Sparkle.framework in Contents/Frameworks/ at runtime
+	install_name_tool -add_rpath @executable_path/../Frameworks .build/$(APP_NAME)
 	# Assemble .app bundle
 	rm -rf $(BUNDLE)
 	mkdir -p $(BUNDLE)/Contents/MacOS
