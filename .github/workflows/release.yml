@@ -35,21 +35,42 @@ jobs:
           VERSION=${{ steps.version.outputs.VERSION }}
           DMG="ClaudeUsageBar-${VERSION}.dmg"
 
-          # Locate sign_update (unpacked by swift build as part of Sparkle SPM artifact)
-          SIGN_UPDATE=$(find .build/artifacts -name "sign_update" -type f 2>/dev/null | head -1)
-          if [ -z "$SIGN_UPDATE" ]; then
-            echo "ERROR: sign_update tool not found. Did swift build run?" >&2
+          # Verify DMG exists
+          if [ ! -f "$DMG" ]; then
+            echo "ERROR: DMG not found: $DMG" >&2
+            ls -la *.dmg 2>/dev/null || echo "No .dmg files in working directory"
             exit 1
           fi
+          echo "DMG: $DMG ($(stat -f%z "$DMG") bytes)"
 
-          # sign_update reads SPARKLE_PRIVATE_KEY from the environment automatically.
-          SIG_OUTPUT=$("$SIGN_UPDATE" "$DMG")
+          # Verify key secret is present
+          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
+            echo "ERROR: SPARKLE_PRIVATE_KEY secret is empty or not set" >&2
+            exit 1
+          fi
+          echo "Key length: ${#SPARKLE_PRIVATE_KEY} chars"
+
+          # Locate sign_update
+          SIGN_UPDATE=$(find .build/artifacts -name "sign_update" -type f 2>/dev/null | head -1)
+          if [ -z "$SIGN_UPDATE" ]; then
+            echo "ERROR: sign_update not found in .build/artifacts" >&2
+            exit 1
+          fi
+          echo "sign_update: $SIGN_UPDATE"
+
+          # Write key to temp file (more reliable than env var for some key formats)
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > /tmp/sparkle_key
+          SIG_OUTPUT=$("$SIGN_UPDATE" --ed-key-file /tmp/sparkle_key "$DMG" 2>&1)
+          EXIT_CODE=$?
+          rm -f /tmp/sparkle_key
+          echo "sign_update exit code: $EXIT_CODE"
           echo "sign_update output: $SIG_OUTPUT"
+          [ $EXIT_CODE -eq 0 ] || exit 1
 
-          # Parse edSignature value (output format: sparkle:edSignature="..." sparkle:length="...")
+          # Parse edSignature value
           ED_SIG=$(echo "$SIG_OUTPUT" | grep -o 'edSignature="[^"]*"' | cut -d'"' -f2)
           if [ -z "$ED_SIG" ]; then
-            echo "ERROR: Could not parse edSignature from sign_update output." >&2
+            echo "ERROR: Could not parse edSignature from output above" >&2
             exit 1
           fi
 
