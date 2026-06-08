@@ -29,7 +29,16 @@ The title bar shows session usage at a glance. Colour shifts to amber at 85%, re
 2. Open the DMG and drag **ClaudeUsageBar** to your Applications folder
 3. Open the app
 
-**First launch — Gatekeeper warning:** macOS will block the app because it isn't notarized. To open it: right-click the app → **Open** → **Open** in the dialog. You only need to do this once.
+### ⚠️ Gatekeeper warning on first launch
+
+macOS will block the app with a message saying it "cannot be opened because the developer cannot be verified." This is expected — the app is open source but not notarized with Apple.
+
+**To open it, do one of the following:**
+
+- **Right-click** (or Control-click) the app in Finder → **Open** → click **Open** in the dialog that appears
+- **Or:** go to **System Settings → Privacy & Security** → scroll down to the ClaudeUsageBar section → click **Open Anyway**
+
+You only need to do this once. macOS remembers your choice.
 
 ## First launch
 
