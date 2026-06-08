@@ -54,17 +54,20 @@ app: test
 	# Ad-hoc sign the app — Sparkle.framework is already signed by the Sparkle project
 	codesign --force --sign - $(BUNDLE)
 	codesign --verify $(BUNDLE)
-	# Package as DMG with Applications alias for drag-to-install
+	# Package as DMG with drag-to-install UI (requires: brew install create-dmg)
 	rm -rf .build/dmg-staging
 	mkdir .build/dmg-staging
 	cp -r $(BUNDLE) .build/dmg-staging/
-	ln -sf /Applications .build/dmg-staging/Applications
 	rm -f $(DMG) $(DMG).sha256
-	hdiutil create \
-	  -volname "$(APP_NAME)" \
-	  -srcfolder .build/dmg-staging \
-	  -ov -format UDZO \
-	  $(DMG)
+	create-dmg \
+	  --volname "$(APP_NAME)" \
+	  --window-size 540 360 \
+	  --icon-size 100 \
+	  --icon "$(APP_NAME).app" 135 180 \
+	  --hide-extension "$(APP_NAME).app" \
+	  --app-drop-link 405 180 \
+	  $(DMG) \
+	  .build/dmg-staging/
 	shasum -a 256 $(DMG) > $(DMG).sha256
 	@echo "Built $(DMG) ($(VERSION))"
 	@cat $(DMG).sha256
