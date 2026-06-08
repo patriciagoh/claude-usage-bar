@@ -38,27 +38,20 @@ final class SetupViewModel {
 
     func connect() async {
         state = .connecting
-        var wroteToPersistentStores = false
+        var storedOrgID = false
         do {
             let cookie = try readCookie()
-            // Perform all async work before writing to shared stores.
             let orgID = try await discoveryClient.discoverOrgID(sessionCookie: cookie)
-            let usage = try await apiClient.fetch(sessionCookie: cookie)
-            // All awaits done — write to shared stores and update state atomically
-            // (no suspension points below, so no concurrent writes can interleave).
-            wroteToPersistentStores = true
-            discoveredOrgID = orgID
+            // Store orgID now so ClaudeAPIEndpoint.usageURL can build the fetch URL.
             OrgIDStore.orgID = orgID
+            storedOrgID = true
+            let usage = try await apiClient.fetch(sessionCookie: cookie)
+            discoveredOrgID = orgID
             try KeychainManualCookieReader.save(cookie)
             CookieSourceStore.set(selectedSource)
             state = .success(percentageUsed: usage.weekly.percentageUsed)
         } catch {
-            // Only invalidate the org ID if we successfully wrote it during this
-            // connect() call — avoids clearing an org ID set by a prior successful
-            // setup when connect() fails early (e.g. during cookie reading).
-            if wroteToPersistentStores {
-                OrgIDStore.invalidate()
-            }
+            if storedOrgID { OrgIDStore.invalidate() }
             state = .failure(message(for: error))
         }
     }
@@ -89,8 +82,12 @@ final class SetupViewModel {
             return "Network error. Check your connection and try again."
         case .parsingFailed:
             return "Couldn't read your account data. The API may have changed."
+        case .notConfigured:
+            return "Bug: org ID not set before fetch."
+        case .unexpectedResponse:
+            return "API returned unexpected status."
         default:
-            return "Setup failed. Please try again."
+            return "Setup failed: \(pe)"
         }
     }
 }
