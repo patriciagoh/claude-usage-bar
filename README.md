@@ -2,9 +2,7 @@
 
 A native macOS menu bar app that shows your claude.ai usage at a glance.
 
-```
-73% · 3d 14h
-```
+<img src="docs/screenshots/menu.png" width="300" alt="ClaudeUsageBar menu showing session and weekly usage">
 
 Built with Swift/AppKit, no third-party dependencies except [Sparkle](https://sparkle-project.org/) for automatic updates.
 
@@ -15,8 +13,6 @@ Built with Swift/AppKit, no third-party dependencies except [Sparkle](https://sp
 - **Current session** — how much of your active session limit you've used, with time until reset
 - **Weekly** — how much of your weekly limit you've used, with time until reset
 - **Updated at** timestamp and a Refresh button to pull fresh data on demand
-
-The title bar shows session usage at a glance. Colour shifts to amber at 85%, red at 100%.
 
 ## Requirements
 
