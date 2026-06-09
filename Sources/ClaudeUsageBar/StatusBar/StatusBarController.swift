@@ -39,9 +39,8 @@ final class StatusBarController {
     // MARK: - Title
 
     private func updateTitle(data: UsageData) {
-        let pct = Int((data.session?.percentageUsed ?? 0.0) * 100)
-        let resetDate = data.session?.resetDate ?? Date().addingTimeInterval(4 * 3600)
-        let reset = countdownString(until: resetDate)
+        let pct = Int(data.primary.percentageUsed * 100)
+        let reset = countdownString(until: data.primary.resetDate)
         statusItem.button?.title = "\(pct)% · \(reset)"
     }
 
@@ -223,7 +222,17 @@ final class StatusBarController {
 
         let value = textView.string.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !value.isEmpty else { return }
-        try? KeychainManualCookieReader.save(value)
+        do {
+            try KeychainManualCookieReader.save(value)
+        } catch {
+            let saveAlert = NSAlert()
+            saveAlert.alertStyle = .warning
+            saveAlert.messageText = "Could not save cookie"
+            saveAlert.informativeText = "The session cookie could not be saved to your Keychain. (\(error.localizedDescription))"
+            saveAlert.addButton(withTitle: "OK")
+            saveAlert.runModal()
+            return
+        }
         CookieSourceStore.set(.keychain)
         onCookieChanged?()
     }
@@ -327,16 +336,3 @@ private final class ProgressBarView: NSView {
     }
 }
 
-// MARK: - NSColor hex init
-
-extension NSColor {
-    convenience init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let r = Double((int >> 16) & 0xFF) / 255
-        let g = Double((int >> 8)  & 0xFF) / 255
-        let b = Double(int         & 0xFF) / 255
-        self.init(red: r, green: g, blue: b, alpha: 1)
-    }
-}

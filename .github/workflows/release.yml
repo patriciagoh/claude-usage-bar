@@ -80,14 +80,6 @@ jobs:
           DMG_SIZE=$(stat -f%z "$DMG")
           python3 scripts/update-appcast.py "$VERSION" "$DMG_SIZE" "$ED_SIG"
 
-      - name: Commit updated appcast.xml to main
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add appcast.xml
-          git commit -m "Update appcast.xml for v${{ steps.version.outputs.VERSION }}"
-          git push origin HEAD:main
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -96,3 +88,11 @@ jobs:
           files: |
             ClaudeUsageBar-${{ steps.version.outputs.VERSION }}.dmg
             ClaudeUsageBar-${{ steps.version.outputs.VERSION }}.dmg.sha256
+
+      - name: Commit updated appcast.xml to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add appcast.xml
+          git commit -m "Update appcast.xml for v${{ steps.version.outputs.VERSION }}"
+          git push origin HEAD:main

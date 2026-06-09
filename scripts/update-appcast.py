@@ -5,6 +5,10 @@ Usage: update-appcast.py <version> <dmg_size_bytes> <ed_signature>
 """
 import sys
 
+if len(sys.argv) != 4:
+    print(f"Usage: {sys.argv[0]} <version> <dmg_path> <signature>", file=sys.stderr)
+    sys.exit(1)
+
 version = sys.argv[1]
 size    = sys.argv[2]
 sig     = sys.argv[3]

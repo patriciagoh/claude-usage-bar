@@ -86,6 +86,8 @@ final class SetupViewModel {
             return "Bug: org ID not set before fetch."
         case .unexpectedResponse:
             return "API returned unexpected status."
+        case .cookieDecryptionFailed:
+            return "Could not read your browser cookie. Try using \"Paste manually\" instead."
         default:
             return "Setup failed: \(pe)"
         }

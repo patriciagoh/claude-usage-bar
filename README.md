@@ -66,6 +66,12 @@ On first run, macOS may ask for permission to access the Keychain:
 
 Click **Always Allow** — this grants the app permanent access to its own cookie and prevents the prompt from appearing again on every refresh.
 
+### Cookie expiry
+
+Your session cookie expires when you log out of claude.ai or after extended inactivity. When this happens the menu bar will show a warning. To reconnect:
+1. Log into [claude.ai](https://claude.ai) in your browser to get a fresh session
+2. Click the menu bar item → **Set session cookie…** → paste the new value → **Save**
+
 ## Updating
 
 The app checks for updates automatically via Sparkle. When a new version is available you'll see an in-app prompt — click **Update** and it handles the rest.
@@ -75,9 +81,11 @@ The app checks for updates automatically via Sparkle. When a new version is avai
 ```bash
 git clone https://github.com/patriciagoh/claude-usage-bar
 cd claude-usage-bar
-make build
-open .build/debug/ClaudeUsageBar.app
+make app VERSION=dev
+open .build/ClaudeUsageBar.app
 ```
+
+`make app` requires `create-dmg` (`brew install create-dmg`) and will also run the test suite before building.
 
 No Dock icon — it's menu-bar only.
 
@@ -86,10 +94,11 @@ No Dock icon — it's menu-bar only.
 | Resource | Why | When |
 |---|---|---|
 | macOS Keychain (`com.patriciagoh.ClaudeUsageBar`) | Store and read your session cookie | Read at each refresh; written only when you paste a new cookie |
+| Chrome/Safari cookie store (opt-in only) | Read your session cookie automatically | Only when Chrome or Safari mode is chosen in setup |
 | `https://claude.ai/api/organizations` | Discover your organisation ID | Once, on first successful connection |
 | `https://claude.ai/api/organizations/{id}/usage` | Fetch usage percentage and reset date | Every 5 minutes |
 
-The app does not read your browser's cookie database, access Chrome or Safari files, or send data anywhere other than claude.ai. See [SECURITY.md](SECURITY.md) for the full threat model.
+By default the app does not access your browser. If you choose Chrome or Safari mode during setup, it will read that browser's cookie store to obtain your session automatically (Chrome: reads the cookie database and a Keychain item; Safari: reads ~/Library/Cookies/Cookies.binarycookies and requires Full Disk Access). See [SECURITY.md](SECURITY.md) for the full threat model.
 
 > **Note:** this app uses an unofficial, undocumented claude.ai internal API. It may stop working if Anthropic changes their API without notice.
 
