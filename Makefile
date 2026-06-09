@@ -53,6 +53,7 @@ app: test
 	ditto "$(SPARKLE_FW)" "$(BUNDLE)/Contents/Frameworks/Sparkle.framework"
 	# Inject version from tag
 	/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $(VERSION)" $(PLIST)
+	/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $(VERSION)" $(PLIST)
 	# Ad-hoc sign the app — Sparkle.framework is already signed by the Sparkle project
 	codesign --force --sign - $(BUNDLE)
 	codesign --verify $(BUNDLE)

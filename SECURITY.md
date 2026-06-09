@@ -7,12 +7,11 @@
 | macOS Keychain item `com.patriciagoh.ClaudeUsageBar / manual-session-cookie` | Store the session cookie you paste manually | Only when you use "Set session cookie…" in the menu; read at each 5-min refresh |
 | `https://claude.ai` | Fetch your usage percentage and reset date | Every 5 minutes, single HTTPS GET |
 
-The app does **not** read your browser's cookie store, Chrome's SQLite database, or any Keychain items belonging to your browser. All credential access requires an explicit user action.
+By default the app does **not** read your browser's cookie store. If you explicitly choose Chrome or Safari mode during setup, it will read that browser's cookie store to obtain your session automatically (Chrome: reads the cookie database and the "Chrome Safe Storage" Keychain item; Safari: reads ~/Library/Cookies/Cookies.binarycookies). In keychain (manual paste) mode, no browser files are accessed.
 
 ## What this app does NOT do
 
-- Read your browser's cookie database (Chrome SQLite, Safari binary cookies)
-- Access any Keychain items belonging to your browser
+- Read your browser's cookie database or access browser Keychain items **unless** you explicitly choose Chrome or Safari mode during setup
 - Cache the session cookie in memory between requests
 - Write the session cookie anywhere except the Keychain item you explicitly create
 - Send data to any server other than claude.ai
@@ -22,7 +21,7 @@ The app does **not** read your browser's cookie store, Chrome's SQLite database,
 
 ## Keychain items
 
-The app writes exactly one Keychain item (`manual-session-cookie` under `com.patriciagoh.ClaudeUsageBar`) and only when you explicitly use "Set session cookie…" in the menu. It reads that same item at each polling cycle. It does not read or write any other Keychain entries.
+The app writes exactly one Keychain item (`manual-session-cookie` under `com.patriciagoh.ClaudeUsageBar`) and only when you explicitly use "Set session cookie…" in the menu or complete the setup flow. It reads that same item at each polling cycle. In Chrome mode, it additionally reads the "Chrome Safe Storage" Keychain item (owned by Chrome) to decrypt the cookie database — this requires a one-time user approval prompt from macOS.
 
 ## Threat model
 

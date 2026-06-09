@@ -70,7 +70,7 @@ final class SetupWindowController: NSWindowController {
         [chromeRadio, safariRadio, keychainRadio].forEach { content.addSubview($0!) }
 
         browserNote = NSTextField(labelWithString:
-            "The app will read your session cookie from the browser automatically."
+            "Reads your Chrome cookie database and the \"Chrome Safe Storage\" Keychain item. Allow access when prompted."
         )
         browserNote.font = .systemFont(ofSize: 12)
         browserNote.textColor = .secondaryLabelColor
@@ -136,6 +136,14 @@ final class SetupWindowController: NSWindowController {
         let isPaste = source == .keychain
         pasteScroll.isHidden = !isPaste
         browserNote.isHidden = isPaste
+        switch source {
+        case .chrome:
+            browserNote.stringValue = "Reads your Chrome cookie database and the \"Chrome Safe Storage\" Keychain item. Allow access when prompted."
+        case .safari:
+            browserNote.stringValue = "Reads ~/Library/Cookies/Cookies.binarycookies. Grant Full Disk Access in System Settings → Privacy & Security if this fails."
+        case .keychain:
+            break
+        }
         connectButton.isEnabled = viewModel.canConnect
     }
 

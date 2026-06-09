@@ -76,12 +76,14 @@ private struct DataCursor {
     var offset: Int
 
     mutating func readBE32() -> UInt32 {
+        guard offset + 4 <= data.count else { offset += 4; return 0 }
         defer { offset += 4 }
         return UInt32(data[offset]) << 24 | UInt32(data[offset+1]) << 16
              | UInt32(data[offset+2]) << 8  | UInt32(data[offset+3])
     }
 
     mutating func readLE32() -> UInt32 {
+        guard offset + 4 <= data.count else { offset += 4; return 0 }
         defer { offset += 4 }
         return UInt32(data[offset]) | UInt32(data[offset+1]) << 8
              | UInt32(data[offset+2]) << 16 | UInt32(data[offset+3]) << 24
