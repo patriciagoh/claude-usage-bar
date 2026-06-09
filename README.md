@@ -74,7 +74,19 @@ Your session cookie expires when you log out of claude.ai or after extended inac
 
 ## Updating
 
-The app checks for updates automatically via Sparkle. When a new version is available you'll see an in-app prompt — click **Update** and it handles the rest.
+The app checks for updates automatically via Sparkle. When a new version is available you'll see an in-app prompt:
+
+<img src="docs/screenshots/sparkle-update.png" width="500" alt="Sparkle update prompt showing a new version is available">
+
+Click **Install Update** and it handles the rest.
+
+> **Note:** After updating, macOS may prompt for your Keychain password once — this is normal. Click **Always Allow** to prevent it appearing again.
+
+## Uninstalling
+
+Click the menu bar item → **Uninstall ClaudeUsageBar…** This deletes your saved session cookie and all app data, then quits. You can then move ClaudeUsageBar to the Trash.
+
+<img src="docs/screenshots/uninstall.png" width="300" alt="Uninstall confirmation dialog">
 
 ## Build from source
 
