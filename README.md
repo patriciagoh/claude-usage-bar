@@ -82,6 +82,12 @@ Click **Install Update** and it handles the rest.
 
 > **Note:** After updating, macOS may prompt for your Keychain password once — this is normal. Click **Always Allow** to prevent it appearing again.
 
+## Uninstalling
+
+Click the menu bar item → **Uninstall ClaudeUsageBar…** This deletes your saved session cookie and all app data, then quits. You can then move ClaudeUsageBar to the Trash.
+
+<img src="docs/screenshots/uninstall.png" width="300" alt="Uninstall confirmation dialog">
+
 ## Build from source
 
 ```bash
