@@ -45,8 +45,10 @@ app: test
 	rm -rf $(BUNDLE)
 	mkdir -p $(BUNDLE)/Contents/MacOS
 	mkdir -p $(BUNDLE)/Contents/Frameworks
-	cp .build/$(APP_NAME)      $(BUNDLE)/Contents/MacOS/$(APP_NAME)
-	cp Resources/Info.plist    $(BUNDLE)/Contents/
+	cp .build/$(APP_NAME)                    $(BUNDLE)/Contents/MacOS/$(APP_NAME)
+	cp Resources/Info.plist                  $(BUNDLE)/Contents/
+	mkdir -p $(BUNDLE)/Contents/Resources
+	cp Resources/ClaudeUsageBar.icns         $(BUNDLE)/Contents/Resources/
 	# Embed Sparkle (ditto preserves symlinks)
 	ditto "$(SPARKLE_FW)" "$(BUNDLE)/Contents/Frameworks/Sparkle.framework"
 	# Inject version from tag
