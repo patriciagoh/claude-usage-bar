@@ -65,7 +65,7 @@ final class SetupWindowController: NSWindowController {
 
         chromeRadio = radio("Chrome", tag: 0, x: 24, y: 198)
         safariRadio = radio("Safari", tag: 1, x: 120, y: 198)
-        keychainRadio = radio("Paste manually", tag: 2, x: 210, y: 198)
+        keychainRadio = radio("Paste manually", tag: 2, x: 210, y: 198, width: 140)
         keychainRadio.state = .on
         [chromeRadio, safariRadio, keychainRadio].forEach { content.addSubview($0!) }
 
@@ -121,10 +121,10 @@ final class SetupWindowController: NSWindowController {
         content.addSubview(connectButton)
     }
 
-    private func radio(_ title: String, tag: Int, x: CGFloat, y: CGFloat) -> NSButton {
+    private func radio(_ title: String, tag: Int, x: CGFloat, y: CGFloat, width: CGFloat = 100) -> NSButton {
         let b = NSButton(radioButtonWithTitle: title, target: self, action: #selector(handleSourceChange(_:)))
         b.tag = tag
-        b.frame = NSRect(x: x, y: y, width: 100, height: 20)
+        b.frame = NSRect(x: x, y: y, width: width, height: 20)
         return b
     }
 
