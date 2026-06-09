@@ -64,6 +64,7 @@ app: test
 	create-dmg \
 	  --volname "$(APP_NAME)" \
 	  --window-size 540 360 \
+	  --background "Resources/dmg-background@2x.png" \
 	  --icon-size 100 \
 	  --icon "$(APP_NAME).app" 135 180 \
 	  --hide-extension "$(APP_NAME).app" \
