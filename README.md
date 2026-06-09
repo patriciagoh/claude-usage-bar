@@ -74,7 +74,13 @@ Your session cookie expires when you log out of claude.ai or after extended inac
 
 ## Updating
 
-The app checks for updates automatically via Sparkle. When a new version is available you'll see an in-app prompt — click **Update** and it handles the rest.
+The app checks for updates automatically via Sparkle. When a new version is available you'll see an in-app prompt:
+
+<img src="docs/screenshots/sparkle-update.png" width="500" alt="Sparkle update prompt showing a new version is available">
+
+Click **Install Update** and it handles the rest.
+
+> **Note:** After updating, macOS may prompt for your Keychain password once — this is normal. Click **Always Allow** to prevent it appearing again.
 
 ## Build from source
 
