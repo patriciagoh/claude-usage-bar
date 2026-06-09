@@ -3,13 +3,13 @@
   <channel>
     <title>ClaudeUsageBar</title>
     <item>
-      <title>Version 1.0.4</title>
-      <sparkle:version>1.0.4</sparkle:version>
+      <title>Version 1.0.5</title>
+      <sparkle:version>1.0.5</sparkle:version>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
       <enclosure
-        url="https://github.com/patriciagoh/claude-usage-bar/releases/download/v1.0.4/ClaudeUsageBar-1.0.4.dmg"
-        sparkle:edSignature="m6qcUMt2VoRwPIgPK/VZ4jvMfN0M2VX5wDpPvC8ZmkZmji89hZg50JL+iLhbH9bdsw7Wb0WGkUZE2OqxtBBSAA=="
-        length="2992544"
+        url="https://github.com/patriciagoh/claude-usage-bar/releases/download/v1.0.5/ClaudeUsageBar-1.0.5.dmg"
+        sparkle:edSignature="sglUig7Ni0nF/yjBC4HM4Wu5oaCXx/XLX1OsDvnb6Ly8j1c5l49MqdJHa65+KrYbOeOi8x3Y/4/cvDYTWmLdBg=="
+        length="2992783"
         type="application/octet-stream"
       />
     </item>
