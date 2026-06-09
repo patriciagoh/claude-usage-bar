@@ -20,7 +20,7 @@ final class StatusBarController {
 
     init() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "Claude"
+        statusItem.button?.title = "Claude –"
     }
 
     // MARK: - Public

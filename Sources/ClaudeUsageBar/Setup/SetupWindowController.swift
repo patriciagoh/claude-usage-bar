@@ -106,7 +106,9 @@ final class SetupWindowController: NSWindowController {
         statusLabel = NSTextField(labelWithString: "")
         statusLabel.font = .systemFont(ofSize: 12)
         statusLabel.textColor = .secondaryLabelColor
-        statusLabel.frame = NSRect(x: 24, y: 36, width: 280, height: 18)
+        statusLabel.maximumNumberOfLines = 3
+        statusLabel.cell?.wraps = true
+        statusLabel.frame = NSRect(x: 24, y: 12, width: 300, height: 42)
         content.addSubview(statusLabel)
 
         connectButton = NSButton(
@@ -148,6 +150,7 @@ final class SetupWindowController: NSWindowController {
     }
 
     @objc private func handleConnect() {
+        NSApp.activate(ignoringOtherApps: true)
         viewModel.pastedCookie = pasteField.string
         connectButton.isEnabled = false
         statusLabel.stringValue = "Connecting…"

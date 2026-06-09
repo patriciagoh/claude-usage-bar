@@ -87,7 +87,14 @@ final class SetupViewModel {
         case .unexpectedResponse:
             return "API returned unexpected status."
         case .cookieDecryptionFailed:
-            return "Could not read your browser cookie. Try using \"Paste manually\" instead."
+            switch selectedSource {
+            case .chrome:
+                return "Could not read Chrome's cookie. If a Keychain prompt appeared, try again and click Allow. Otherwise use \"Paste manually\"."
+            case .safari:
+                return "Could not read Safari's cookie. Grant Full Disk Access in System Settings → Privacy & Security, then try again."
+            default:
+                return "Could not read your browser cookie. Try using \"Paste manually\" instead."
+            }
         default:
             return "Setup failed: \(pe)"
         }
