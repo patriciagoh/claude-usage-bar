@@ -138,6 +138,16 @@ final class StatusBarController {
         menu.addItem(openItem)
         menu.addItem(.separator())
 
+        let uninstall = NSMenuItem(
+            title: "Uninstall ClaudeUsageBar…",
+            action: #selector(handleUninstall),
+            keyEquivalent: ""
+        )
+        uninstall.target = self
+        uninstall.isEnabled = true
+        menu.addItem(uninstall)
+        menu.addItem(.separator())
+
         let quit = NSMenuItem(
             title: "Quit ClaudeUsageBar",
             action: #selector(NSApplication.terminate(_:)),
@@ -216,6 +226,27 @@ final class StatusBarController {
         try? KeychainManualCookieReader.save(value)
         CookieSourceStore.set(.keychain)
         onCookieChanged?()
+    }
+
+    @objc private func handleUninstall() {
+        let alert = NSAlert()
+        alert.messageText = "Uninstall ClaudeUsageBar?"
+        alert.informativeText = "This will delete your saved session cookie and all app data, then quit. You can then move ClaudeUsageBar to the Trash."
+        alert.addButton(withTitle: "Uninstall & Quit")
+        alert.addButton(withTitle: "Cancel")
+        alert.alertStyle = .warning
+
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        let response = alert.runModal()
+        NSApp.setActivationPolicy(.accessory)
+
+        guard response == .alertFirstButtonReturn else { return }
+
+        KeychainManualCookieReader.delete()
+        OrgIDStore.invalidate()
+        CookieSourceStore.clear()
+        NSApp.terminate(nil)
     }
 
     // MARK: - Progress row view
