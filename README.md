@@ -31,14 +31,25 @@ The title bar shows session usage at a glance. Colour shifts to amber at 85%, re
 
 ### ⚠️ Gatekeeper warning on first launch
 
-macOS will block the app with a message saying it "cannot be opened because the developer cannot be verified." This is expected — the app is open source but not notarized with Apple.
+Because ClaudeUsageBar is not notarized with Apple, macOS will block it on first launch:
 
-**To open it, do one of the following:**
+<img src="docs/screenshots/gatekeeper-blocked.png" width="320" alt="Gatekeeper blocked dialog">
 
-- **Right-click** (or Control-click) the app in Finder → **Open** → click **Open** in the dialog that appears
-- **Or:** go to **System Settings → Privacy & Security** → scroll down to the ClaudeUsageBar section → click **Open Anyway**
+Click **Done** (not Move to Bin). Then open **System Settings → Privacy & Security** and scroll down:
 
-You only need to do this once. macOS remembers your choice.
+<img src="docs/screenshots/gatekeeper-system-settings.png" width="520" alt="System Settings showing Open Anyway button">
+
+Click **Open Anyway**. A second confirmation appears:
+
+<img src="docs/screenshots/gatekeeper-open-anyway.png" width="280" alt="Open Anyway confirmation dialog">
+
+Click **Open Anyway** again, then authenticate with Touch ID or your password:
+
+<img src="docs/screenshots/gatekeeper-password.png" width="280" alt="Touch ID or password prompt">
+
+You only need to do this once — macOS remembers your choice.
+
+**Shortcut:** right-click (or Control-click) the app in Finder → **Open** to skip straight to the confirmation dialog.
 
 ## First launch
 
@@ -50,6 +61,14 @@ A setup window will appear asking for your Claude session cookie:
 4. Paste it into the setup window → **Connect**
 
 The cookie is saved to your macOS Keychain. Once connected the app polls every 5 minutes automatically.
+
+### Keychain access prompt
+
+On first run, macOS may ask for permission to access the Keychain:
+
+<img src="docs/screenshots/keychain-prompt.png" width="420" alt="Keychain access prompt">
+
+Click **Always Allow** — this grants the app permanent access to its own cookie and prevents the prompt from appearing again on every refresh.
 
 ## Updating
 
