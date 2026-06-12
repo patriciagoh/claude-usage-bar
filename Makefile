@@ -7,13 +7,32 @@ SWIFT_TEST_FLAGS = \
 	-Xlinker -F -Xlinker $(TESTING_FRAMEWORK_PATH) \
 	-Xlinker -rpath -Xlinker $(TESTING_FRAMEWORK_PATH)
 
-.PHONY: test build clean app
+.PHONY: test build clean app run
 
 test:
 	swift test $(SWIFT_TEST_FLAGS)
 
 build:
 	swift build
+
+DEV_BUNDLE = .build/$(APP_NAME)-dev.app
+
+# Fast local dev loop: debug build + minimal .app bundle, launched via `open`.
+# No tests, no lipo, no notarization — just enough to get a real menu bar item.
+run:
+	swift build
+	rm -rf $(DEV_BUNDLE)
+	mkdir -p $(DEV_BUNDLE)/Contents/MacOS
+	mkdir -p $(DEV_BUNDLE)/Contents/Frameworks
+	mkdir -p $(DEV_BUNDLE)/Contents/Resources
+	cp .build/debug/$(APP_NAME)      $(DEV_BUNDLE)/Contents/MacOS/$(APP_NAME)
+	cp Resources/Info.plist          $(DEV_BUNDLE)/Contents/
+	cp Resources/ClaudeUsageBar.icns $(DEV_BUNDLE)/Contents/Resources/
+	ln -sf "$(CURDIR)/$(SPARKLE_FW)" "$(DEV_BUNDLE)/Contents/Frameworks/Sparkle.framework"
+	install_name_tool -add_rpath @executable_path/../Frameworks $(DEV_BUNDLE)/Contents/MacOS/$(APP_NAME)
+	codesign --force --sign - $(DEV_BUNDLE)
+	@-killall $(APP_NAME) 2>/dev/null; sleep 0.3
+	open $(DEV_BUNDLE)
 
 clean:
 	swift package clean
