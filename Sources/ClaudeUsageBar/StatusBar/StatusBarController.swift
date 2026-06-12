@@ -60,7 +60,7 @@ final class StatusBarController {
             menu.addItem(.separator())
 
             // Weekly row
-            addSection(to: menu, title: "Weekly",
+            addSection(to: menu, title: "Weekly session",
                        pct: data.weekly.percentageUsed,
                        subtitle: "Resets \(resetLabel(data.weekly.resetDate))")
             menu.addItem(.separator())
